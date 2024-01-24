@@ -1,37 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import StopWatchButton from "./StopWatchButton";
 
-export default function StopWatch() {
-  // store time
-  const [time, setTime] = useState<number>(0);
+interface IProps {
+  hours: number;
+  minutes: number;
+  seconds: number;
+  milliseconds: number;
+  isRunning: boolean;
+  startStop: React.MouseEventHandler<HTMLButtonElement>;
+  reset: React.MouseEventHandler<HTMLButtonElement>;
+}
 
-  // check if the timer is running
-  const [isRunning, setIsRunning] = useState<boolean>(false);
+export enum ButtonType {
+  Start = "Start",
+  Stop = "Stop",
+  Reset = "Reset",
+}
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-    if (isRunning) {
-      // setting time
-      intervalId = setInterval(() => setTime(time + 1), 10);
-    }
-    return () => clearInterval(intervalId);
-  }, [isRunning, time]);
-
-  // calculate time values
-  const hours = Math.floor(time / 360000);
-  const minutes = Math.floor((time % 360000) / 6000);
-  const seconds = Math.floor((time % 6000) / 100);
-  const milliseconds = time % 100;
-
-  // start/stop the timer
-  const startStop = () => {
-    setIsRunning(!isRunning);
-  };
-
-  // reset timer to 0
-  const reset = () => {
-    setTime(0);
-  };
-
+export default function StopWatch({
+  hours,
+  minutes,
+  seconds,
+  milliseconds,
+  isRunning,
+  startStop,
+  reset,
+}: IProps) {
   return (
     <div>
       <div>
@@ -40,8 +34,11 @@ export default function StopWatch() {
         {milliseconds.toString().padStart(2, "0")}
       </div>
       <div>
-        <button onClick={startStop}>{isRunning ? "Stop" : "Start"}</button>
-        <button onClick={reset}>Reset</button>
+        <StopWatchButton
+          type={isRunning ? ButtonType.Stop : ButtonType.Start}
+          handleClick={startStop}
+        />
+        <StopWatchButton type={ButtonType.Reset} handleClick={reset} />
       </div>
     </div>
   );
