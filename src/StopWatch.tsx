@@ -1,23 +1,13 @@
 import React from "react";
 
 interface IProps {
-  hours: number;
-  minutes: string;
-  seconds: string;
-  milliseconds: string;
+  timeString: string;
 }
 
-export default function StopWatch({
-  hours,
-  minutes,
-  seconds,
-  milliseconds,
-}: IProps) {
+export default function StopWatch({ timeString }: IProps) {
   return (
     <div>
-      <div>
-        {hours}:{minutes}:{seconds}:{milliseconds}
-      </div>
+      <div>{timeString}</div>
     </div>
   );
 }

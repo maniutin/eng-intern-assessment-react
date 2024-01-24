@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import StopWatch from "./StopWatch";
 import StopWatchButton from "./StopWatchButton";
 
-export enum ButtonType {
+enum ButtonType {
   Start = "Start",
   Stop = "Stop",
   Reset = "Reset",
@@ -16,8 +16,7 @@ export default function App() {
   // check if the timer is running
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
-  // array to store laps
-  const lapsArr: number[] = [];
+  const [laps, setLaps] = useState<string[]>([]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -29,10 +28,18 @@ export default function App() {
   }, [isRunning, time]);
 
   // calculate time values
-  const hours = Math.floor(time / 360000);
-  const minutes = Math.floor((time % 360000) / 6000);
-  const seconds = Math.floor((time % 6000) / 100);
-  const milliseconds = time % 100;
+  const formatTime = (time: number): string => {
+    const hours = Math.floor(time / 360000);
+    const minutes = Math.floor((time % 360000) / 6000)
+      .toString()
+      .padStart(2, "0");
+    const seconds = Math.floor((time % 6000) / 100)
+      .toString()
+      .padStart(2, "0");
+    const milliseconds = (time % 100).toString().padStart(2, "0");
+
+    return `${hours}:${minutes}:${seconds}:${milliseconds}`;
+  };
 
   // start/stop the timer
   const startStop = () => {
@@ -42,20 +49,16 @@ export default function App() {
   // reset timer to 0
   const reset = () => {
     setTime(0);
+    setLaps([]);
   };
 
   const lap = () => {
-    lapsArr.push(time);
+    setLaps([formatTime(time), ...laps]);
   };
 
   return (
     <main>
-      <StopWatch
-        hours={hours}
-        minutes={minutes.toString().padStart(2, "0")}
-        seconds={seconds.toString().padStart(2, "0")}
-        milliseconds={milliseconds.toString().padStart(2, "0")}
-      />
+      <StopWatch timeString={formatTime(time)} />
       <div>
         <StopWatchButton
           type={isRunning ? ButtonType.Stop : ButtonType.Start}
@@ -65,6 +68,11 @@ export default function App() {
           type={isRunning ? ButtonType.Lap : ButtonType.Reset}
           handleClick={isRunning ? lap : reset}
         />
+      </div>
+      <div>
+        {laps.map((lap: string, index: number) => (
+          <div key={index}>{lap}</div>
+        ))}
       </div>
     </main>
   );
