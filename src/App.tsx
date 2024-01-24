@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import StopWatch from "./StopWatch";
+import StopWatchButton from "./StopWatchButton";
+
+export enum ButtonType {
+  Start = "Start",
+  Stop = "Stop",
+  Reset = "Reset",
+  Lap = "Lap",
+}
 
 export default function App() {
   // store time
@@ -7,6 +15,9 @@ export default function App() {
 
   // check if the timer is running
   const [isRunning, setIsRunning] = useState<boolean>(false);
+
+  // array to store laps
+  const lapsArr: number[] = [];
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -33,17 +44,28 @@ export default function App() {
     setTime(0);
   };
 
+  const lap = () => {
+    lapsArr.push(time);
+  };
+
   return (
     <main>
       <StopWatch
         hours={hours}
-        minutes={minutes}
-        seconds={seconds}
-        milliseconds={milliseconds}
-        isRunning={isRunning}
-        startStop={startStop}
-        reset={reset}
+        minutes={minutes.toString().padStart(2, "0")}
+        seconds={seconds.toString().padStart(2, "0")}
+        milliseconds={milliseconds.toString().padStart(2, "0")}
       />
+      <div>
+        <StopWatchButton
+          type={isRunning ? ButtonType.Stop : ButtonType.Start}
+          handleClick={startStop}
+        />
+        <StopWatchButton
+          type={isRunning ? ButtonType.Lap : ButtonType.Reset}
+          handleClick={isRunning ? lap : reset}
+        />
+      </div>
     </main>
   );
 }
