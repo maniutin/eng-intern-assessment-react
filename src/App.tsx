@@ -16,6 +16,7 @@ export default function App() {
   // check if the timer is running
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
+  // store laps
   const [laps, setLaps] = useState<string[]>([]);
 
   useEffect(() => {
@@ -52,8 +53,9 @@ export default function App() {
     setLaps([]);
   };
 
+  // store lap
   const lap = () => {
-    setLaps([formatTime(time), ...laps]);
+    setLaps([...laps, formatTime(time)]);
   };
 
   return (
@@ -71,7 +73,7 @@ export default function App() {
       </div>
       <div>
         {laps.map((lap: string, index: number) => (
-          <div key={index}>{lap}</div>
+          <div key={index}>{`Lap ${index + 1} : ${lap}`}</div>
         ))}
       </div>
     </main>
