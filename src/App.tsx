@@ -1,7 +1,8 @@
-import "./App.css";
 import React, { useEffect, useState } from "react";
 import StopWatch from "./StopWatch";
 import StopWatchButton from "./StopWatchButton";
+
+import "./App.css";
 
 enum ButtonType {
   Start = "Start",
@@ -82,9 +83,11 @@ export default function App() {
         <div className="laps-list">
           {laps
             .map((lap: string, index: number) => (
-              <div key={index} className="lap-record">{`Lap ${
-                index + 1
-              }: ${lap}`}</div>
+              <div
+                key={index}
+                className="lap-record"
+                data-testid="lap-record"
+              >{`Lap ${index + 1}: ${lap}`}</div>
             ))
             .reverse()}
         </div>

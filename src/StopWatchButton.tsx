@@ -1,5 +1,6 @@
-import "./StopWatchButton.css";
 import React from "react";
+
+import "./StopWatchButton.css";
 
 interface IProps {
   type: string;

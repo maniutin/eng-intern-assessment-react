@@ -1,5 +1,6 @@
-import "./StopWatch.css";
 import React from "react";
+
+import "./StopWatch.css";
 
 interface IProps {
   timeString: string;

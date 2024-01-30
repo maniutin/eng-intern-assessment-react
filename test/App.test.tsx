@@ -3,14 +3,9 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import App from "../src/App";
 
-describe("test", () => {
+describe("Basic StopWatch Controls", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
     render(<App />);
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
   });
 
   it("starts the stopwatch", () => {
@@ -33,6 +28,17 @@ describe("test", () => {
       stoppedTime
     );
   });
+});
+
+describe("Records Lap Times", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    render(<App />);
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   it("records lap times", () => {
     fireEvent.click(screen.getByText("Start")); // Start
@@ -43,7 +49,7 @@ describe("test", () => {
 
     fireEvent.click(screen.getByText("Lap")); // Lap
 
-    expect(document.body.querySelector(".lap-record").textContent).toBe(
+    expect(screen.getByTestId("lap-record").textContent).toBe(
       "Lap 1: 0:00:02:00"
     );
   });
