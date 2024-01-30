@@ -1,3 +1,4 @@
+import "./App.css";
 import React, { useEffect, useState } from "react";
 import StopWatch from "./StopWatch";
 import StopWatchButton from "./StopWatchButton";
@@ -60,22 +61,34 @@ export default function App() {
 
   return (
     <main>
-      <StopWatch timeString={formatTime(time)} />
-      <div>
-        <StopWatchButton
-          type={isRunning ? ButtonType.Stop : ButtonType.Start}
-          handleClick={startStop}
-        />
-        <StopWatchButton
-          type={isRunning ? ButtonType.Lap : ButtonType.Reset}
-          handleClick={isRunning ? lap : reset}
-        />
+      <div className="stopwatch">
+        <StopWatch timeString={formatTime(time)} />
+        <div className="control-buttons">
+          <div className="start-stop">
+            <StopWatchButton
+              type={isRunning ? ButtonType.Stop : ButtonType.Start}
+              handleClick={startStop}
+            />
+          </div>
+          <div className="lap-reset">
+            <StopWatchButton
+              type={isRunning ? ButtonType.Lap : ButtonType.Reset}
+              handleClick={isRunning ? lap : reset}
+            />
+          </div>
+        </div>
       </div>
-      <div>
-        {laps.map((lap: string, index: number) => (
-          <div key={index}>{`Lap ${index + 1} : ${lap}`}</div>
-        ))}
-      </div>
+      {laps.length > 0 && (
+        <div className="laps-list">
+          {laps
+            .map((lap: string, index: number) => (
+              <div key={index} className="lap-record">{`Lap ${
+                index + 1
+              }: ${lap}`}</div>
+            ))
+            .reverse()}
+        </div>
+      )}
     </main>
   );
 }

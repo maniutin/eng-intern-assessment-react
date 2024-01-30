@@ -1,3 +1,4 @@
+import "./StopWatchButton.css";
 import React from "react";
 
 interface IProps {
@@ -6,5 +7,9 @@ interface IProps {
 }
 
 export default function StopWatchButton({ type, handleClick }: IProps) {
-  return <button onClick={handleClick}>{type}</button>;
+  return (
+    <button className="control-button" onClick={handleClick}>
+      {type}
+    </button>
+  );
 }

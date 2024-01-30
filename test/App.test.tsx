@@ -3,34 +3,48 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import App from "../src/App";
 
-test("starts the stopwatch", () => {
-  render(<App />);
+describe("test", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    render(<App />);
+  });
 
-  fireEvent.click(screen.getByText("Start"));
-  expect(screen.getByText(/(\d{2}:){2}\d{2}/)).toBeInTheDocument();
-});
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
-test("stops the stopwatch", () => {
-  render(<App />);
+  it("starts the stopwatch", () => {
+    fireEvent.click(screen.getByText("Start"));
+    expect(screen.getByText(/(\d{2}:){2}\d{2}/)).toBeInTheDocument();
+  });
 
-  fireEvent.click(screen.getByText("Start"));
-  expect(screen.getByText(/(\d{2}:){2}\d{2}/)).toBeInTheDocument();
-});
+  it("resets the stopwatch", () => {
+    fireEvent.click(screen.getByText("Reset"));
+    expect(screen.getByText("0:00:00:00")).toBeInTheDocument();
+  });
 
-test("resets the stopwatch", () => {
-  render(<App />);
+  it("stops and resumes the stopwatch", () => {
+    fireEvent.click(screen.getByText("Start")); // Start
+    fireEvent.click(screen.getByText("Stop")); // Stop
+    const stoppedTime = screen.getByText(/(\d{2}:){2}\d{2}/);
 
-  fireEvent.click(screen.getByText("Reset"));
-  expect(screen.getByText("0:00:00:00")).toBeInTheDocument();
-});
+    fireEvent.click(screen.getByText("Start")); // Start Again
+    expect(screen.getByText(/(\d{2}:){2}\d{2}/).textContent).not.toBe(
+      stoppedTime
+    );
+  });
 
-test("pauses and resumes the stopwatch", () => {
-  const { getByText } = render(<App />);
+  it("records lap times", () => {
+    fireEvent.click(screen.getByText("Start")); // Start
 
-  fireEvent.click(screen.getByText("Start")); // Start
-  fireEvent.click(screen.getByText("Stop")); // Stop
-  const pausedTime = getByText(/(\d{2}:){2}\d{2}/);
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
 
-  fireEvent.click(screen.getByText("Start")); // Start Again
-  expect(getByText(/(\d{2}:){2}\d{2}/).textContent).not.toBe(pausedTime);
+    fireEvent.click(screen.getByText("Lap")); // Lap
+
+    expect(document.body.querySelector(".lap-record").textContent).toBe(
+      "Lap 1: 0:00:02:00"
+    );
+  });
 });

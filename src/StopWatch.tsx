@@ -1,3 +1,4 @@
+import "./StopWatch.css";
 import React from "react";
 
 interface IProps {
@@ -5,9 +6,5 @@ interface IProps {
 }
 
 export default function StopWatch({ timeString }: IProps) {
-  return (
-    <div>
-      <div>{timeString}</div>
-    </div>
-  );
+  return <div className="stopwatch-display">{timeString}</div>;
 }
